@@ -9,17 +9,18 @@ EXECUTABLE = ffuck
 
 TEST_EXECUTABLE = stack_test
 
-SOURCES =  stack.f08  ffuck.f08
+OBJECTS = stack.o ffuck.o #$(SOURCES:.f08=.o)
 
-OBJECTS = $(SOURCES:.f08=.o)
+MOD = $(OBJECTS:.o=.mod)
 
-TEST_SOURCES = stack.f08 stack_test.f08
+TEST_OBJECTS = stack.o stack_test.o
 
-TEST_OBJECTS = $(TEST_SOURCES:.f08=.o)
+#delete intermediate files
+.INTERMEDIATE: $(OBJECTS) $(TEST_OBJECTS) 
 
-all: $(SOURCES) $(EXECUTABLE)
+all: $(EXECUTABLE) 
 
-test: $(TEST_SOURCES) $(TEST_EXECUTABLE)
+test: $(TEST_EXECUTABLE) 
 
 $(EXECUTABLE): $(OBJECTS)
 	$(FC) $(LDFLAGS) $(OBJECTS) -o $@
@@ -28,7 +29,8 @@ $(TEST_EXECUTABLE): $(TEST_OBJECTS)
 	$(FC) $(LDFLAGS) $(TEST_OBJECTS) -o $@
 
 clean:
-	rm -f *.o *.mod *.MOD ffuck
+	rm -f *.o *.mod *.MOD ffuck stack_test
 
 %.o: %.f08
 	$(FC) $(FCFLAGS) $< -c -o $@
+

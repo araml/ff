@@ -23,8 +23,8 @@ module stack
 contains
     subroutine stack_init(self)
         type(stack_t) :: self
-        self%m_size  = 0 
-        self%m_asize = 0
+        self%m_size  = 1
+        self%m_asize = 1
     end subroutine stack_init
 
     function stack_size(self) result(ret)
@@ -33,15 +33,17 @@ contains
         ret = self%m_size
     end function stack_size
 
+    ! Copy value ontop of the stack
+    ! If we already had as much elements as we could store
+    ! we resize the stack (1.5 * size)
     subroutine stack_push(self, value)
         type(stack_t) :: self
         integer       :: value
         if (self%m_size == self%m_asize) then
             call stack_resize(self)
         end if
-        self%m_size = self%m_size + 1
         self%m_stack(self%m_size) = value
-        print *, self%m_stack(self%m_size)
+        self%m_size = self%m_size + 1
     end subroutine stack_push
 
     subroutine stack_pop(self)
@@ -51,12 +53,12 @@ contains
         end if
     end subroutine stack_pop
 
-    ! Must be called with at least ne element
+    ! Must be called with at least one element
     function stack_top(self) result(ret)
         integer       :: ret
         type(stack_t) :: self
         if (self%m_size > 1) then
-            ret = self%m_stack(self%m_size)
+            ret = self%m_stack(self%m_size - 1)
         end if
     end function stack_top
 
@@ -66,7 +68,7 @@ contains
         integer              :: temp_asize
         allocate(temp((3*(size(self%m_stack) + 1))/2))
         temp_asize  = (3*(size(self%m_stack)+1))/2
-        if (self%m_size > 0) then
+        if (self%m_size > 1) then
             temp(1:size(self%m_stack)) = self%m_stack
             deallocate(self%m_stack)
         end if
