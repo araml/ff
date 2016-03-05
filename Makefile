@@ -1,18 +1,12 @@
 .SUFFIXES:
 FC = gfortran
-
-FCFLAGS = -g -fbounds-check -O2 #-I/usr/include
-
+FCFLAGS = -g -fbounds-check -O2 
 LDFLAGS =
 
 EXECUTABLE = ffuck 
-
 TEST_EXECUTABLE = stack_test
 
-OBJECTS = stack.o ffuck.o #$(SOURCES:.f08=.o)
-
-MOD = $(OBJECTS:.o=.mod)
-
+OBJECTS = stack.o utility.o ffuck.o 
 TEST_OBJECTS = stack.o stack_test.o
 
 #delete intermediate files
